@@ -39,8 +39,7 @@ app.get('/', (req, res) => {
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', async (req, res) => {
   // Parse the request body from the POST
-  let body = req.body
-  console.log(req.body.entry[0].changes[0].value.messages[0])
+  let body = req.body;
   // Check the Incoming webhook message
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
   if (req.body.object) {
@@ -63,12 +62,12 @@ app.post('/webhook', async (req, res) => {
           user_name
         )
       } else {
-        let button = "button";
-        let audio = "audio";
+        const button = "button";
+        const audio = "audio";
         // check if media type is audio
         if (req.body.entry[0].changes[0].value.messages[0].type == audio){
-          let confirmation = 'audio received.';
-          let payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
+          const confirmation = 'audio received.';
+          const payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
           console.log(payload_text)
 
           await interact(
