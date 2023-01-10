@@ -15,6 +15,9 @@ const DMconfig = {
   stripSSML: true,
 }
 
+const GRAPH_URL = "https://graph.facebook.com/v15.0"
+
+
 const request = require('request'),
   express = require('express'),
   body_parser = require('body-parser'),
@@ -37,7 +40,7 @@ app.get('/', (req, res) => {
 app.post('/webhook', async (req, res) => {
   // Parse the request body from the POST
   let body = req.body
-  console.log(body)
+  console.log(req.body.entry[0].changes[0].value.messages[0])
   // Check the Incoming webhook message
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
   if (req.body.object) {
@@ -60,6 +63,24 @@ app.post('/webhook', async (req, res) => {
           user_name
         )
       } else {
+        let button = "button";
+        let audio = "audio";
+        // check if media type is audio
+        if (req.body.entry[0].changes[0].value.messages[0].type == audio){
+          let confirmation = 'audio received.';
+          let payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
+          console.log(payload_text)
+
+          await interact(
+            user_id,
+            {
+              type: "text",
+              payload: confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id),
+            },
+            phone_number_id,
+            user_name
+          );
+        };
         if (
           req.body.entry[0].changes[0].value.messages[0].interactive.button_reply.id.includes(
             'path-'
@@ -175,7 +196,7 @@ async function interact(user_id, request, phone_number_id, user_name) {
       config: DMconfig,
     },
   })
-
+  console.log(response)
   let isEnding = response.data.filter(({ type }) => type === 'end')
   if (isEnding.length > 0) {
     console.log('isEnding')
