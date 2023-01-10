@@ -67,7 +67,7 @@ app.post('/webhook', async (req, res) => {
         // check if media type is audio
         if (req.body.entry[0].changes[0].value.messages[0].type == audio){
           const confirmation = 'audio received.';
-          // const payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
+          const payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
           // console.log(payload_text)
           console.log(JSON.stringify(req.body.entry[0].changes[0].value.messages[0]))
 
@@ -75,7 +75,7 @@ app.post('/webhook', async (req, res) => {
             user_id,
             {
               type: "text",
-              payload: confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id),
+              payload: confirmation.concat(req.body.entry[0].changes[0].value.messages[0].audio.id),
             },
             phone_number_id,
             user_name
