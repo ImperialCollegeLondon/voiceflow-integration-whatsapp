@@ -23,6 +23,7 @@ const request = require('request'),
 
 app.listen(process.env.PORT || 3000, () => console.log('webhook is listening'))
 
+// root
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 app.post('/webhook', async (req, res) => {
   // Parse the request body from the POST
   let body = req.body
+  console.log(body)
   // Check the Incoming webhook message
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
   if (req.body.object) {
