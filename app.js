@@ -61,65 +61,60 @@ app.post('/webhook', async (req, res) => {
           phone_number_id,
           user_name
         )
-      } else {
-        const button = "button";
-        const audio = "audio";
+      } else if (req.body.entry[0].changes[0].value.messages[0].type == "audio"){
         // check if media type is audio
-        if (req.body.entry[0].changes[0].value.messages[0].type == audio){
-          const confirmation = 'audio received.';
-          // const payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
-          // console.log(payload_text)
-          console.log(JSON.stringify(req.body.entry[0].changes[0].value.messages[0]))
+        const confirmation = 'audio received.';
+        // const payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
+        // console.log(payload_text)
+        console.log(JSON.stringify(req.body.entry[0].changes[0].value.messages[0]))
 
-          await interact(
-            user_id,
-            {
-              type: "text",
-              payload: confirmation.concat(req.body.entry[0].changes[0].value.messages[0].audio.id),
-            },
-            phone_number_id,
-            user_name
-          );
-        };
-        if (
+        await interact(
+          user_id,
+          {
+            type: "text",
+            payload: confirmation.concat(req.body.entry[0].changes[0].value.messages[0].audio.id),
+          },
+          phone_number_id,
+          user_name
+        );
+      } else if (
           req.body.entry[0].changes[0].value.messages[0].interactive.button_reply.id.includes(
             'path-'
           )
-        ) {
-          await interact(
-            user_id,
-            {
-              type: req.body.entry[0].changes[0].value.messages[0].interactive
-                .button_reply.id,
-              payload: {
-                label:
-                  req.body.entry[0].changes[0].value.messages[0].interactive
-                    .button_reply.title,
-              },
+      ) {
+        await interact(
+          user_id,
+          {
+            type: req.body.entry[0].changes[0].value.messages[0].interactive
+              .button_reply.id,
+            payload: {
+              label:
+                req.body.entry[0].changes[0].value.messages[0].interactive
+                  .button_reply.title,
             },
-            phone_number_id,
-            user_name
-          )
-        } else {
-          await interact(
-            user_id,
-            {
-              type: 'intent',
-              payload: {
-                query:
-                  req.body.entry[0].changes[0].value.messages[0].interactive
-                    .button_reply.title,
-                intent: {
-                  name: req.body.entry[0].changes[0].value.messages[0]
-                    .interactive.button_reply.id,
-                },
-                entities: [],
+          },
+          phone_number_id,
+          user_name
+        )
+      } else {
+        await interact(
+          user_id,
+          {
+            type: 'intent',
+            payload: {
+              query:
+                req.body.entry[0].changes[0].value.messages[0].interactive
+                  .button_reply.title,
+              intent: {
+                name: req.body.entry[0].changes[0].value.messages[0]
+                  .interactive.button_reply.id,
               },
+              entities: [],
             },
-            phone_number_id,
-            user_name
-          )
-        }
+          },
+          phone_number_id,
+          user_name
+        )
       }
     }
     res.status(200).json({ message: 'ok' })
