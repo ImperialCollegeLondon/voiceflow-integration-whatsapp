@@ -413,10 +413,7 @@ async function sendMessage(messages, phone_number_id, from) {
     }
     if (!ignore) {
       // message delay
-      await new return_message_delay(function (resolve) {
-        setTimeout(resolve, 2000);
-      });
-
+      await new Promise(resolve => setTimeout(resolve, 2000));
       await axios({
         method: 'POST',
         url:
