@@ -412,6 +412,11 @@ async function sendMessage(messages, phone_number_id, from) {
       ignore = true
     }
     if (!ignore) {
+      // message delay
+      await new return_message_delay(function (resolve) {
+        setTimeout(resolve, 2000);
+      });
+
       await axios({
         method: 'POST',
         url:
