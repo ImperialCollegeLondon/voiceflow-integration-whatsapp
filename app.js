@@ -353,6 +353,7 @@ async function interact(user_id, request, phone_number_id, user_name) {
   }
 }
 
+// function sends message from the bot to the user
 async function sendMessage(messages, phone_number_id, from) {
   for (let j = 0; j < messages.length; j++) {
     let data
@@ -425,7 +426,8 @@ async function sendMessage(messages, phone_number_id, from) {
         },
       })
         .then(function (response) {
-          // console.log('Message sent:', messages[j])
+          // checking format of message sent by bot
+          console.log('Message sent:', messages[j])
         })
         .catch(function (err) {
           console.log(err)
