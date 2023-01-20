@@ -414,7 +414,7 @@ async function sendMessage(messages, phone_number_id, from) {
       let message = messages[j].value;
       let urlRegex = /\[(.*?)\]\((.*?)\)/g;
       message = message.replace(urlRegex, function(match, text, url) {
-        return text + " " + url;
+        return `<a href="${url}">${text}</a>`;
       });
       data = {
         messaging_product: 'whatsapp',
