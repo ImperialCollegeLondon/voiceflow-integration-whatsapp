@@ -398,7 +398,24 @@ async function sendMessage(messages, phone_number_id, from) {
         },
       }
       // Text
+    // } else if (messages[j].type == 'text') {
+    //   data = {
+    //     messaging_product: 'whatsapp',
+    //     recipient_type: 'individual',
+    //     to: from,
+    //     type: 'text',
+    //     text: {
+    //       preview_url: true,
+    //       body: messages[j].value,
+    //     },
+    //   }
     } else if (messages[j].type == 'text') {
+      // find any hyperlinks in the text
+      let message = messages[j].value;
+      let urlRegex = /\[(.*?)\]\((.*?)\)/g;
+      message = message.replace(urlRegex, function(match, text, url) {
+        return text + " " + url;
+      });
       data = {
         messaging_product: 'whatsapp',
         recipient_type: 'individual',
@@ -406,7 +423,7 @@ async function sendMessage(messages, phone_number_id, from) {
         type: 'text',
         text: {
           preview_url: true,
-          body: messages[j].value,
+          body: message,
         },
       }
     } else {
