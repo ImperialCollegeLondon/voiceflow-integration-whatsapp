@@ -40,9 +40,9 @@ app.get('/', (req, res) => {
 app.post('/webhook', async (req, res) => {
   // Parse the request body from the POST
   console.log('post /webhook, req')
-  console.log(JSON.stringify(req))
+  console.log(req)
   console.log('post /webhook, res')
-  console.log(JSON.stringify(res))
+  console.log(res)
   let body = req.body;
   // Check the Incoming webhook message
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
@@ -137,9 +137,9 @@ app.get('/webhook', (req, res) => {
    **/
 
   console.log('get /webhook, req')
-  console.log(JSON.stringify(req))
+  console.log(req)
   console.log('get /webhook, res')
-  console.log(JSON.stringify(res))
+  console.log(res)
 
   // Parse params from the webhook verification request
   let mode = req.query['hub.mode']
