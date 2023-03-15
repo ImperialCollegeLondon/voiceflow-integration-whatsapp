@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', async (req, res) => {
   // Parse the request body from the POST
+  console.log('post /webhook, req')
+  console.log(JSON.stringify(req))
+  console.log('post /webhook, res')
+  console.log(JSON.stringify(res))
   let body = req.body;
   // Check the Incoming webhook message
   // info on WhatsApp text message payload: https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/payload-examples#text-messages
@@ -61,7 +65,7 @@ app.post('/webhook', async (req, res) => {
           phone_number_id,
           user_name
         )
-      } else if (req.body.entry[0].changes[0].value.messages[0].type == "audio"){
+      } else if (req.body.entry[0].changes[0].value.messages[0].type == "audio") {
         // check if media type is audio
         const confirmation = 'audio received.';
         // const payload_text = confirmation.concat(req.body.entry[0].changes[0].value.messages[0].data.id);
@@ -78,9 +82,9 @@ app.post('/webhook', async (req, res) => {
           user_name
         );
       } else if (
-          req.body.entry[0].changes[0].value.messages[0].interactive.button_reply.id.includes(
-            'path-'
-          )
+        req.body.entry[0].changes[0].value.messages[0].interactive.button_reply.id.includes(
+          'path-'
+        )
       ) {
         await interact(
           user_id,
@@ -131,6 +135,11 @@ app.get('/webhook', (req, res) => {
    * UPDATE YOUR VERIFY TOKEN IN .env FILE
    *This will be the Verify Token value when you set up webhook
    **/
+
+  console.log('get /webhook, req')
+  console.log(JSON.stringify(req))
+  console.log('get /webhook, res')
+  console.log(JSON.stringify(res))
 
   // Parse params from the webhook verification request
   let mode = req.query['hub.mode']
@@ -191,6 +200,7 @@ async function interact(user_id, request, phone_number_id, user_name) {
       config: DMconfig,
     },
   })
+  console.log('def interact response')
   console.log(response)
   let isEnding = response.data.filter(({ type }) => type === 'end')
   if (isEnding.length > 0) {
@@ -306,7 +316,7 @@ async function interact(user_id, request, phone_number_id, user_name) {
         let link = null
         if (
           response.data[i].payload.buttons[b].request.payload.actions !=
-            undefined &&
+          undefined &&
           response.data[i].payload.buttons[b].request.payload.actions.length > 0
         ) {
           link =
@@ -347,6 +357,9 @@ async function interact(user_id, request, phone_number_id, user_name) {
       }, Number(response.data[i].payload.timeout) * 1000)
     }
   }
+  console.log('def interact')
+  console.log(messages)
+
   await sendMessage(messages, phone_number_id, user_id)
   if (isEnding == true) {
     session = null
@@ -398,22 +411,22 @@ async function sendMessage(messages, phone_number_id, from) {
         },
       }
       // Text
-    // } else if (messages[j].type == 'text') {
-    //   data = {
-    //     messaging_product: 'whatsapp',
-    //     recipient_type: 'individual',
-    //     to: from,
-    //     type: 'text',
-    //     text: {
-    //       preview_url: true,
-    //       body: messages[j].value,
-    //     },
-    //   }
+      // } else if (messages[j].type == 'text') {
+      //   data = {
+      //     messaging_product: 'whatsapp',
+      //     recipient_type: 'individual',
+      //     to: from,
+      //     type: 'text',
+      //     text: {
+      //       preview_url: true,
+      //       body: messages[j].value,
+      //     },
+      //   }
     } else if (messages[j].type == 'text') {
       // find any hyperlinks in the text
       let message = messages[j].value;
       let urlRegex = /\[(.*?)\]\((.*?)\)/g;
-      message = message.replace(urlRegex, function(match, text, url) {
+      message = message.replace(urlRegex, function (match, text, url) {
         return `<a href="${url}">${text}</a>`;
       });
       data = {
