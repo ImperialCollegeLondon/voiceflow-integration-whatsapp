@@ -64,7 +64,7 @@ app.post('/webhook', async (req, res) => {
       } else if (req.body.entry[0].changes[0].value.messages[0].type == "audio") {
         // check if media type is audio
         const confirmation = 'audio received.';
-        console.log(JSON.stringify(req.body.entry[0].changes[0].value.messages[0]));
+        console.log(JSON.stringify(confirmation.concat(req.body.entry[0].changes[0].value.messages[0].audio.id)));
 
         await interact(
           user_id,
